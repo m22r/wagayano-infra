@@ -8,6 +8,11 @@ resource "aws_iam_role_policy_attachment" "admin" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
+resource "aws_iam_role_policy_attachment" "billing" {
+  role       = aws_iam_role.admin.name
+  policy_arn = "arn:aws:iam::aws:policy/job-function/Billing"
+}
+
 resource "aws_iam_group" "admin" {
   name = var.admin_group
 }
