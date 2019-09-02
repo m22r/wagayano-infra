@@ -9,21 +9,6 @@
       "Resource": [
         "${admin_role_arn}"
       ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:Get*",
-        "s3:Put*"
-      ],
-      "Resource": "arn:aws:s3:::${tfstate_bucket}/*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:List*"
-      ],
-      "Resource": "arn:aws:s3:::${tfstate_bucket}"
     }
   ]
 }

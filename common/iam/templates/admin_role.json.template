@@ -8,7 +8,12 @@
           "${admin_user_arns}"
         ]
       },
-      "Action": "sts:AssumeRole"
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "Bool": {
+          "aws:MultiFactorAuthPresent": "true"
+        }
+      }
     }
   ]
 }
