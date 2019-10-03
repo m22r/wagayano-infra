@@ -44,4 +44,13 @@ data "aws_iam_policy_document" "lambda" {
       "arn:aws:logs:${local.aws_region}:${local.aws_account_id}:log-group:/aws/lambda/${local.name}:*",
     ]
   }
+
+  statement {
+    actions = [
+      "lambda:InvokeFunction",
+    ]
+    resources = [
+      "*",
+    ]
+  }
 }
