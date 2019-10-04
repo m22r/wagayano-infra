@@ -36,6 +36,13 @@ resource "aws_lambda_function" "lambda" {
   role = aws_iam_role.lambda.arn
   handler = var.handler
   runtime = var.runtime
+  dynamic "vpc_config" {
+    for_each = length(var.subnet_ids) > 0 ? [""] : []
+    content {
+      subnet_ids = var.subnet_ids
+      security_group_ids = var.security_group_ids
+    }
+  }
   environment {
     variables = var.env_vars
   }

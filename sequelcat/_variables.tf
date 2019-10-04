@@ -13,6 +13,43 @@ locals {
   lambda_timeout_sec    = 180
   log_retention_in_days = 30
   stage_name            = "v1"
+  project               = "wagayano"
+  vpc_id                = data.aws_vpc.vpc.id
+  newbits               = 10
+  netnum_offset         = 8
+}
+
+data "aws_vpc" "vpc" {
+  filter {
+    name   = "tag:Name"
+    values = ["${local.project}-vpc"]
+  }
+}
+
+data "aws_security_group" "common" {
+  name = "${local.project}-common-sg"
+}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+data "aws_route_tables" "private" {
+  vpc_id = local.vpc_id
+
+  filter {
+    name   = "tag:Name"
+    values = ["${local.project}-private*"]
+  }
+}
+
+data "aws_route_table" "public" {
+  vpc_id = local.vpc_id
+
+  filter {
+    name   = "tag:Name"
+    values = ["${local.project}-public*"]
+  }
 }
 
 data "aws_ssm_parameter" "slack_api_token" {
@@ -31,7 +68,6 @@ data "template_file" "swagger" {
   }
 }
 
-
 data "aws_iam_policy_document" "lambda" {
   statement {
     actions = [
@@ -48,6 +84,18 @@ data "aws_iam_policy_document" "lambda" {
   statement {
     actions = [
       "lambda:InvokeFunction",
+    ]
+    resources = [
+      "arn:aws:lambda:${local.aws_region}:${local.aws_account_id}:function:${local.name}",
+      "arn:aws:lambda:${local.aws_region}:${local.aws_account_id}:function:${local.name}:*",
+    ]
+  }
+
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
     ]
     resources = [
       "*",

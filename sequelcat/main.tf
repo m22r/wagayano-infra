@@ -16,4 +16,22 @@ module "lambda" {
   env_vars          = local.lambda_env_vars
   retention_in_days = local.log_retention_in_days
   iam_policy        = data.aws_iam_policy_document.lambda.json
+  subnet_ids        = module.lambda_network.subnet_ids
+  security_group_ids = [
+    data.aws_security_group.common.id,
+    module.lambda_network.sg_id,
+  ]
+}
+
+module "lambda_network" {
+  source                  = "../_modules/network"
+  prefix                  = "${local.project}-${local.name}"
+  type                    = "private"
+  availability_zones      = data.aws_availability_zones.available.names
+  vpc_id                  = local.vpc_id
+  vpc_cidr                = data.aws_vpc.vpc.cidr_block
+  newbits                 = local.newbits
+  netnum_offset           = local.netnum_offset
+  private_route_table_ids = data.aws_route_tables.private.ids
+  public_route_table_id   = data.aws_route_table.public.id
 }

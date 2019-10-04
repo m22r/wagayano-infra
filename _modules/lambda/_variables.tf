@@ -13,4 +13,11 @@ variable "retention_in_days" {
   default = 30
 }
 variable "iam_policy" {}
-
+variable "subnet_ids" {
+  type    = list(string)
+  default = []
+}
+variable "security_group_ids" {
+  type    = list(string)
+  default = []
+}
