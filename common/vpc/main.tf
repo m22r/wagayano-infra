@@ -50,6 +50,7 @@ resource "aws_subnet" "nat" {
 
   tags = {
     Name = "${var.prefix}-nat-public-${substr(var.availability_zones[count.index], -2, 2)}"
+    Role = "nat"
   }
 }
 
@@ -67,6 +68,7 @@ resource "aws_subnet" "batch" {
 
   tags = {
     Name = "${var.prefix}-batch-private-${substr(var.availability_zones[count.index], -2, 2)}"
+    Role = "batch"
   }
 }
 
