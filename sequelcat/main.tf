@@ -68,3 +68,8 @@ module "postgres" {
   subnet_ids = module.network.subnet_ids
   family     = local.postgres_family
 }
+
+module "parameters" {
+	source = "../_modules/ssm_parameters"
+	parameters = local.ssm_parameters
+}
