@@ -16,14 +16,14 @@ module "lambda" {
   env_vars          = local.lambda_env_vars
   retention_in_days = local.log_retention_in_days
   iam_policy        = data.aws_iam_policy_document.lambda.json
-  subnet_ids        = module.lambda_network.subnet_ids
+  subnet_ids        = module.network.subnet_ids
   security_group_ids = [
     data.aws_security_group.common.id,
-    module.lambda_network.sg_id,
+    module.network.sg_id,
   ]
 }
 
-module "lambda_network" {
+module "network" {
   source                  = "../_modules/network"
   prefix                  = "${local.project}-${local.name}"
   type                    = "private"
@@ -34,4 +34,37 @@ module "lambda_network" {
   netnum_offset           = local.netnum_offset
   private_route_table_ids = data.aws_route_tables.private.ids
   public_route_table_id   = data.aws_route_table.public.id
+}
+
+module "mysql" {
+  source             = "../_modules/aurora"
+  prefix             = "${local.project}-${local.name}"
+  engine             = local.mysql_engine
+  engine_version     = local.mysql_engine_version
+  availability_zones = data.aws_availability_zones.available.names
+  db_name            = local.mysql_db_name
+  db_user            = local.mysql_db_user
+  db_pass            = local.mysql_db_pass
+  vpc_security_group_ids = [
+    module.network.sg_id,
+  ]
+  subnet_ids     = module.network.subnet_ids
+  family         = local.mysql_family
+  instance_class = "db.t3.small"
+}
+
+module "postgres" {
+  source             = "../_modules/aurora"
+  prefix             = "${local.project}-${local.name}"
+  engine             = local.postgres_engine
+  engine_version     = local.postgres_engine_version
+  availability_zones = data.aws_availability_zones.available.names
+  db_name            = local.postgres_db_name
+  db_user            = local.postgres_db_user
+  db_pass            = local.postgres_db_pass
+  vpc_security_group_ids = [
+    module.network.sg_id,
+  ]
+  subnet_ids = module.network.subnet_ids
+  family     = local.postgres_family
 }

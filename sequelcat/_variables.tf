@@ -10,13 +10,25 @@ locals {
     "ENV"   = terraform.workspace
     "TOKEN" = data.aws_ssm_parameter.slack_api_token.value
   }
-  lambda_timeout_sec    = 180
-  log_retention_in_days = 30
-  stage_name            = "v1"
-  project               = "wagayano"
-  vpc_id                = data.aws_vpc.vpc.id
-  newbits               = 10
-  netnum_offset         = 8
+  lambda_timeout_sec      = 180
+  log_retention_in_days   = 30
+  stage_name              = "v1"
+  project                 = "wagayano"
+  vpc_id                  = data.aws_vpc.vpc.id
+  newbits                 = 10
+  netnum_offset           = 4
+  mysql_engine            = "aurora-mysql"
+  mysql_engine_version    = "5.7.12"
+  mysql_db_name           = "mysql_test"
+  mysql_db_user           = "mysql_test"
+  mysql_db_pass           = "mysql_test"
+  mysql_family            = "aurora-mysql5.7"
+  postgres_engine         = "aurora-postgresql"
+  postgres_engine_version = "10.7"
+  postgres_db_name        = "postgres_test"
+  postgres_db_user        = "postgres_test"
+  postgres_db_pass        = "postgres_test"
+  postgres_family         = "aurora-postgresql10"
 }
 
 data "aws_vpc" "vpc" {
