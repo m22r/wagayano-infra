@@ -21,3 +21,6 @@ variable "security_group_ids" {
   type    = list(string)
   default = []
 }
+variable "timeout" {
+  default = 3
+}

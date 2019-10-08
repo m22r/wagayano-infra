@@ -36,6 +36,7 @@ resource "aws_lambda_function" "lambda" {
   role = aws_iam_role.lambda.arn
   handler = var.handler
   runtime = var.runtime
+  timeout = var.timeout
   dynamic "vpc_config" {
     for_each = length(var.subnet_ids) > 0 ? [""] : []
     content {

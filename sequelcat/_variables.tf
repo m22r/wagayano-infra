@@ -14,6 +14,7 @@ locals {
     "S3_BUCKET"               = module.s3.id
     "S3_BASE_DIR"             = "/${local.name}"
     "ALLOW_SELF_APPROVE"      = "1"
+    "DB_CONN_MAX_LIFETIME"    = local.lambda_timeout_sec - 2
   }
   lambda_timeout_sec      = 180
   log_retention_in_days   = 30

@@ -15,6 +15,7 @@ module "lambda" {
   runtime           = local.lambda_runtime
   env_vars          = local.lambda_env_vars
   retention_in_days = local.log_retention_in_days
+  timeout           = local.lambda_timeout_sec
   iam_policy        = data.aws_iam_policy_document.lambda.json
   subnet_ids        = module.network.subnet_ids
   security_group_ids = [
