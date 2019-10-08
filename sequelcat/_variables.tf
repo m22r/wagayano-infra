@@ -7,10 +7,13 @@ locals {
   lambda_handler = local.app_name
   lambda_runtime = "go1.x"
   lambda_env_vars = {
-    "ENV"   = terraform.workspace
-    "TOKEN" = data.aws_ssm_parameter.slack_api_token.value
-		"SSM_PARAMETER_BASE_PATH" = "/${local.name}"
-		"CHANNEL" = "CHTL6PWNS"
+    "ENV"                     = terraform.workspace
+    "TOKEN"                   = data.aws_ssm_parameter.slack_api_token.value
+    "SSM_PARAMETER_BASE_PATH" = "/${local.name}"
+    "CHANNEL"                 = "CHTL6PWNS"
+    "S3_BUCKET"               = module.s3.id
+    "S3_BASE_DIR"             = "/${local.name}"
+    "ALLOW_SELF_APPROVE"      = "1"
   }
   lambda_timeout_sec      = 180
   log_retention_in_days   = 30
@@ -32,47 +35,47 @@ locals {
   postgres_db_pass        = "postgres_test"
   postgres_family         = "aurora-postgresql10"
   ssm_parameters = [
-		{
-			key = "/${local.name}/cluster/${module.mysql.cluster_id}/db_user"
-			value = "${local.mysql_db_user}"
-			type = "String"
-		},
-		{
-			key = "/${local.name}/cluster/${module.mysql.cluster_id}/db_pass"
-			value = "${local.mysql_db_pass}"
-			type = "SecureString"
-		},
-		{
-			key = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_user"
-			value = "${local.mysql_db_user}"
-			type = "String"
-		},
-		{
-			key = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_pass"
-			value = "${local.mysql_db_pass}"
-			type = "SecureString"
-		},
-		{
-			key = "/${local.name}/cluster/${module.postgres.cluster_id}/db_user"
-			value = "${local.postgres_db_user}"
-			type = "String"
-		},
-		{
-			key = "/${local.name}/cluster/${module.postgres.cluster_id}/db_pass"
-			value = "${local.postgres_db_pass}"
-			type = "SecureString"
-		},
-		{
-			key = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_user"
-			value = "${local.postgres_db_user}"
-			type = "String"
-		},
-		{
-			key = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_pass"
-			value = "${local.postgres_db_pass}"
-			type = "SecureString"
-		}
-	]
+    {
+      key   = "/${local.name}/cluster/${module.mysql.cluster_id}/db_user"
+      value = "${local.mysql_db_user}"
+      type  = "String"
+    },
+    {
+      key   = "/${local.name}/cluster/${module.mysql.cluster_id}/db_pass"
+      value = "${local.mysql_db_pass}"
+      type  = "SecureString"
+    },
+    {
+      key   = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_user"
+      value = "${local.mysql_db_user}"
+      type  = "String"
+    },
+    {
+      key   = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_pass"
+      value = "${local.mysql_db_pass}"
+      type  = "SecureString"
+    },
+    {
+      key   = "/${local.name}/cluster/${module.postgres.cluster_id}/db_user"
+      value = "${local.postgres_db_user}"
+      type  = "String"
+    },
+    {
+      key   = "/${local.name}/cluster/${module.postgres.cluster_id}/db_pass"
+      value = "${local.postgres_db_pass}"
+      type  = "SecureString"
+    },
+    {
+      key   = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_user"
+      value = "${local.postgres_db_user}"
+      type  = "String"
+    },
+    {
+      key   = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_pass"
+      value = "${local.postgres_db_pass}"
+      type  = "SecureString"
+    }
+  ]
 }
 
 data "aws_vpc" "vpc" {
@@ -174,6 +177,17 @@ data "aws_iam_policy_document" "lambda" {
     ]
     resources = [
       "arn:aws:ssm:${local.aws_region}:${local.aws_account_id}:parameter/${local.name}/*",
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+    ]
+    resources = [
+      module.s3.arn,
+      "${module.s3.arn}/*",
     ]
   }
 }

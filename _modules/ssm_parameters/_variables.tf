@@ -1,3 +1,3 @@
 variable "parameters" {
-	type = list(map(string))
+  type = list(map(string))
 }

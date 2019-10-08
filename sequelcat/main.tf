@@ -70,6 +70,11 @@ module "postgres" {
 }
 
 module "parameters" {
-	source = "../_modules/ssm_parameters"
-	parameters = local.ssm_parameters
+  source     = "../_modules/ssm_parameters"
+  parameters = local.ssm_parameters
+}
+
+module "s3" {
+  source = "../_modules/s3"
+  name   = "${local.project}-${local.name}"
 }

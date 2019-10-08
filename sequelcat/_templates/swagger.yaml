@@ -5,7 +5,7 @@ info:
 schemes:
   - https
 paths:
-  "/api/interactive":
+  "/api/interaction":
     post:
       description: ${description}
       produces:
