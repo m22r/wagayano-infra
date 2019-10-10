@@ -1,0 +1,33 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: ${app_name}
+schemes:
+  - https
+paths:
+  "${interaction_path}":
+    post:
+      description: ${description}
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: "The request was successful."
+      x-amazon-apigateway-integration:
+        uri: ${uri_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+  "${command_path}":
+    post:
+      description: ${description}
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: "The request was successful."
+      x-amazon-apigateway-integration:
+        uri: ${uri_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
