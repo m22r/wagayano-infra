@@ -1,11 +1,13 @@
 locals {
-  app_name       = "sequelcat"
-  name           = local.app_name
-  aws_account_id = data.aws_caller_identity.current.account_id
-  aws_region     = "ap-northeast-1"
-  description    = "The API handles queries with slack apps"
-  lambda_handler = local.app_name
-  lambda_runtime = "go1.x"
+  app_name         = "sequelcat"
+  name             = local.app_name
+  aws_account_id   = data.aws_caller_identity.current.account_id
+  aws_region       = "ap-northeast-1"
+  description      = "The API handles queries with slack apps"
+  command_path     = "/api/command"
+  interaction_path = "/api/interaction"
+  lambda_handler   = local.app_name
+  lambda_runtime   = "go1.x"
   lambda_env_vars = {
     "ENV"                     = terraform.workspace
     "TOKEN"                   = data.aws_ssm_parameter.slack_api_token.value
@@ -14,7 +16,7 @@ locals {
     "S3_BUCKET"               = module.s3.id
     "S3_BASE_DIR"             = "/${local.name}"
     "ALLOW_SELF_APPROVE"      = "1"
-    "DB_CONN_MAX_LIFETIME"    = local.lambda_timeout_sec - 2
+    "QUERY_TIMEOUT"           = floor(local.lambda_timeout_sec * 0.9)
   }
   lambda_timeout_sec      = 180
   log_retention_in_days   = 30
@@ -122,9 +124,11 @@ data "template_file" "swagger" {
   template = file("${path.root}/_templates/swagger.yaml")
 
   vars = {
-    description = local.description
-    app_name    = local.app_name
-    uri_arn     = module.lambda.invoke_arn
+    interaction_path = local.interaction_path
+    command_path     = local.command_path
+    description      = local.description
+    app_name         = local.app_name
+    uri_arn          = module.lambda.invoke_arn
   }
 }
 
