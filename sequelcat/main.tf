@@ -39,6 +39,7 @@ module "network" {
 
 module "mysql" {
   source             = "../_modules/aurora"
+  instance_count     = 0
   prefix             = "${local.project}-${local.name}"
   engine             = local.mysql_engine
   engine_version     = local.mysql_engine_version
@@ -56,6 +57,7 @@ module "mysql" {
 
 module "postgres" {
   source             = "../_modules/aurora"
+  instance_count     = 0
   prefix             = "${local.project}-${local.name}"
   engine             = local.postgres_engine
   engine_version     = local.postgres_engine_version

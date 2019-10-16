@@ -48,16 +48,16 @@ locals {
       value = "${local.mysql_db_pass}"
       type  = "SecureString"
     },
-    {
-      key   = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_user"
-      value = "${local.mysql_db_user}"
-      type  = "String"
-    },
-    {
-      key   = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_pass"
-      value = "${local.mysql_db_pass}"
-      type  = "SecureString"
-    },
+    #    {
+    #      key   = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_user"
+    #      value = "${local.mysql_db_user}"
+    #      type  = "String"
+    #    },
+    #    {
+    #      key   = "/${local.name}/instance/${module.mysql.instance_ids[0]}/db_pass"
+    #      value = "${local.mysql_db_pass}"
+    #      type  = "SecureString"
+    #    },
     {
       key   = "/${local.name}/cluster/${module.postgres.cluster_id}/db_user"
       value = "${local.postgres_db_user}"
@@ -68,16 +68,16 @@ locals {
       value = "${local.postgres_db_pass}"
       type  = "SecureString"
     },
-    {
-      key   = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_user"
-      value = "${local.postgres_db_user}"
-      type  = "String"
-    },
-    {
-      key   = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_pass"
-      value = "${local.postgres_db_pass}"
-      type  = "SecureString"
-    }
+    #    {
+    #      key   = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_user"
+    #      value = "${local.postgres_db_user}"
+    #      type  = "String"
+    #    },
+    #    {
+    #      key   = "/${local.name}/instance/${module.postgres.instance_ids[0]}/db_pass"
+    #      value = "${local.postgres_db_pass}"
+    #      type  = "SecureString"
+    #    }
   ]
 }
 
