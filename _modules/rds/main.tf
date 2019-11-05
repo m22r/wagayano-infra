@@ -18,6 +18,7 @@ resource "aws_db_instance" "default" {
   backup_window                   = var.backup_window
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   backup_retention_period         = var.backup_retention_period
+  skip_final_snapshot             = var.skip_final_snapshot
 }
 
 resource "aws_db_subnet_group" "default" {

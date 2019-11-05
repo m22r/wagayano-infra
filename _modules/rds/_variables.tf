@@ -39,3 +39,7 @@ variable "db_params" {
   type    = map(string)
   default = {}
 }
+variable "skip_final_snapshot" {
+  type    = bool
+  default = false
+}

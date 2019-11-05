@@ -61,3 +61,21 @@ data "aws_route_table" "public" {
 }
 
 data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "phoenix_ci" {
+  statement {
+    actions = [
+      "rds:DescribeDBClusters",
+      "rds:ListTags",
+      "rds:RestoreDBClusterToPointInTime",
+      "rds:DescribeDBInstances",
+      "rds:CreateDBInstance",
+      "rds:RestoreDBInstanceToPointInTime",
+      "rds:DeleteDBInstance",
+      "rds:DeleteDBCluster",
+    ]
+    resources = [
+      "*",
+    ]
+  }
+}

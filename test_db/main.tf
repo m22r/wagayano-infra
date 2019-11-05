@@ -1,6 +1,6 @@
 module "network" {
   source                  = "../_modules/network"
-  prefix                  = "${local.project}-${local.name}"
+  prefix                  = local.name
   type                    = "private"
   availability_zones      = data.aws_availability_zones.available.names
   vpc_id                  = local.vpc_id
@@ -14,7 +14,7 @@ module "network" {
 module "mysql_aurora" {
   source             = "../_modules/aurora"
   instance_count     = 1
-  prefix             = "${local.project}-${local.name}"
+  prefix             = local.name
   engine             = local.mysql_engine
   engine_version     = local.mysql_engine_version
   availability_zones = data.aws_availability_zones.available.names
@@ -24,15 +24,16 @@ module "mysql_aurora" {
   vpc_security_group_ids = [
     module.network.sg_id,
   ]
-  subnet_ids     = module.network.subnet_ids
-  family         = local.mysql_family
-  instance_class = "db.t3.small"
+  subnet_ids          = module.network.subnet_ids
+  family              = local.mysql_family
+  instance_class      = "db.t3.small"
+  skip_final_snapshot = true
 }
 
 module "postgres_aurora" {
   source             = "../_modules/aurora"
   instance_count     = 1
-  prefix             = "${local.project}-${local.name}"
+  prefix             = local.name
   engine             = local.postgres_engine
   engine_version     = local.postgres_engine_version
   availability_zones = data.aws_availability_zones.available.names
@@ -42,13 +43,14 @@ module "postgres_aurora" {
   vpc_security_group_ids = [
     module.network.sg_id,
   ]
-  subnet_ids = module.network.subnet_ids
-  family     = local.postgres_family
+  subnet_ids          = module.network.subnet_ids
+  family              = local.postgres_family
+  skip_final_snapshot = true
 }
 
 module "mysql_rds" {
   source         = "../_modules/rds"
-  prefix         = "${local.project}-${local.name}"
+  prefix         = local.name
   engine         = local.mysql_rds_engine
   engine_version = local.mysql_rds_engine_version
   db_name        = local.mysql_rds_db_name
@@ -57,6 +59,13 @@ module "mysql_rds" {
   vpc_security_group_ids = [
     module.network.sg_id,
   ]
-  subnet_ids = module.network.subnet_ids
-  family     = local.mysql_rds_family
+  subnet_ids          = module.network.subnet_ids
+  family              = local.mysql_rds_family
+  skip_final_snapshot = true
+}
+
+module "phoenix_ci_user" {
+  source     = "../_modules/iam_user"
+  name       = "${local.name}-phoenix-ci"
+  iam_policy = data.aws_iam_policy_document.phoenix_ci.json
 }
