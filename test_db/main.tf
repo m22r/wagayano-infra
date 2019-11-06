@@ -75,3 +75,9 @@ module "rainbows_ci_user" {
   name       = "${local.name}-rainbows-ci"
   iam_policy = data.aws_iam_policy_document.rainbows_ci.json
 }
+
+module "doberman_ci_user" {
+  source     = "../_modules/iam_user"
+  name       = "${local.name}-doberman-ci"
+  iam_policy = data.aws_iam_policy_document.doberman_ci.json
+}

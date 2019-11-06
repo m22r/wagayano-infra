@@ -91,3 +91,16 @@ data "aws_iam_policy_document" "rainbows_ci" {
     ]
   }
 }
+
+data "aws_iam_policy_document" "doberman_ci" {
+  statement {
+    actions = [
+      "cloudtrail:LookupEvents",
+      "iam:ListAccountAliases",
+      "iam:GetRole",
+    ]
+    resources = [
+      "*",
+    ]
+  }
+}
