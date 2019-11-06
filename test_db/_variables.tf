@@ -79,3 +79,15 @@ data "aws_iam_policy_document" "phoenix_ci" {
     ]
   }
 }
+
+data "aws_iam_policy_document" "rainbows_ci" {
+  statement {
+    actions = [
+      "iam:ListAccountAliases",
+      "ce:GetCostAndUsage",
+    ]
+    resources = [
+      "*",
+    ]
+  }
+}

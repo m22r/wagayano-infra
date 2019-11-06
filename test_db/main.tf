@@ -69,3 +69,9 @@ module "phoenix_ci_user" {
   name       = "${local.name}-phoenix-ci"
   iam_policy = data.aws_iam_policy_document.phoenix_ci.json
 }
+
+module "rainbows_ci_user" {
+  source     = "../_modules/iam_user"
+  name       = "${local.name}-rainbows-ci"
+  iam_policy = data.aws_iam_policy_document.rainbows_ci.json
+}
