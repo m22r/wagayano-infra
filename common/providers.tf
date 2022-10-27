@@ -1,6 +1,6 @@
 provider "aws" {
   region  = local.aws_region
-  version = "~> 2.15"
+  version = "~> 4.0"
 }
 
 provider "template" {
